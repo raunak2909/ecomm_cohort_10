@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text("Don't have an account?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(
+                        Navigator.pushReplacementNamed(
                           context,
                           AppRoutes.PAGE_SIGN_UP
                         );

@@ -1,3 +1,7 @@
+import 'package:ecomm_template/domain/constants/app_routes.dart';
+import 'package:ecomm_template/ui/user_on_boarding/bloc/user_bloc.dart';
+import 'package:ecomm_template/ui/user_on_boarding/bloc/user_event.dart';
+import 'package:ecomm_template/ui/user_on_boarding/bloc/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +21,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   bool isPasswordHidden = true;
   bool isConfirmHidden = true;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +61,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ),
-
-                SizedBox(height: 8),
 
                 Center(
                   child: Text(
@@ -220,7 +224,38 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 SizedBox(height: 30),
 
-                SizedBox(
+                BlocConsumer<UserBloc, UserState>(
+                  listener: (context, state) {
+
+                    if(state is UserLoadingState){
+                      isLoading = true;
+                    }
+
+                    if(state is UserFailureState){
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.errorMsg),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+
+                    if(state is UserSuccessState){
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Successfully Registered"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                      Navigator.pushReplacementNamed(context, AppRoutes.PAGE_DASHBOARD);
+                    }
+
+
+                  },
+                  builder: (context, state) {
+                    return SizedBox(
                       width: double.infinity,
                       height: 55,
                       child: ElevatedButton(
@@ -232,7 +267,14 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-
+                            context.read<UserBloc>().add(
+                              UserRegisterEvent(
+                                name: nameController.text,
+                                email: emailController.text,
+                                mobNo: mobNoController.text,
+                                pass: passwordController.text,
+                              ),
+                            );
                           }
                         },
                         child: Text(
@@ -240,9 +282,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
-                    ),
-
-                SizedBox(height: 20),
+                    );
+                  }
+                ),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +292,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     Text("Already have an account?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.PAGE_LOGIN
+                        );
                       },
                       child: Text(
                         "Login",

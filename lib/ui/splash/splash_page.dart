@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../../domain/constants/app_routes.dart';
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -15,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     Timer(Duration(seconds: 4), () async {
-
+      Navigator.pushReplacementNamed(context, AppRoutes.PAGE_LOGIN);
     });
   }
 

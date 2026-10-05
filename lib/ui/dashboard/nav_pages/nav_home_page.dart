@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class NavHomePage extends StatelessWidget {
@@ -16,8 +17,35 @@ class NavHomePage extends StatelessWidget {
           SizedBox(
             height: 100,
           ),
+          SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: CarouselSlider.builder(
+                itemCount: bannerUrls.length,
+                itemBuilder: (_, index, _){
+                  return Container(
+                    margin: EdgeInsets.all(11),
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(21),
+                      image: DecorationImage(
+                        image: NetworkImage(bannerUrls[index]),
+                        fit: BoxFit.cover
+                      )
+                    ),
+                  );
+                }, options: CarouselOptions(
+              autoPlayAnimationDuration: Duration(seconds: 2),
+              autoPlayCurve: Curves.slowMiddle,
+              autoPlay: true,
+              viewportFraction: 1
+            )),
+          ),
         ],
       )
+
+          ///dotsindicator
 
 
       /*ListView.builder(itemBuilder: (_, index){
